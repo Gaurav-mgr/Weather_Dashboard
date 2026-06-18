@@ -90,11 +90,11 @@ export default function App() {
             </div>
 
             <div className="weather-details">
-              <div className="weather-detail-item">
+              <div className="weather-detail-item border">
                 <strong>Humidity</strong>
                 <span>{data.current.main.humidity}%</span>
               </div>
-              <div className="weather-detail-item">
+              <div className="weather-detail-item border">
                 <strong>Wind Speed</strong>
                 <span>{data.current.wind.speed} m/s</span>
               </div>

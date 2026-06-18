@@ -308,12 +308,11 @@ body::before {
 /* Weather Details */
 .weather-details {
   display: flex;
-  gap: 44px;
+  justify-content: space-between;
   margin: 10px 0 55px 0;
   padding: 20px 0;
   border-top: 1px solid var(--border-color);
   border-bottom: 1px solid var(--border-color);
-  flex-wrap: wrap;
   font-size: 14px;
   color: var(--text-light);
 }
@@ -322,6 +321,7 @@ body::before {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  /* background: aqua; */
 }
 
 .weather-detail-item strong {
@@ -337,7 +337,7 @@ body::before {
 
 /* Forecast Section */
 .forecast-section {
-  margin-top: 30px;
+  margin-top: -20px;
 }
 
 .forecast-section h3 {
@@ -508,19 +508,14 @@ body::before {
     margin-left: 0;
   }
 
-  .weather-details {
-    flex-direction: column;
-    gap: 16px;
-  }
-
   .main-content {
     padding: 20px;
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 430px) {
   .app-header h1 {
-    font-size: 24px;
+    font-size: 25px;
   }
 
   .weather-temp {
@@ -533,7 +528,7 @@ body::before {
   }
 
   .forecast-card {
-    min-height: 198px;
+    min-height: 98px;
     padding: 12px;
   }
 }
@@ -742,16 +737,48 @@ body.weather-bg-mist::before {
   }
 
   .weather-info h2 {
-    font-size: 25px;
-    line-height: 18px;
+    font-size: 27px;
+    line-height: 19px;
   }
 
   .weather-description {
     font-size: 12px;
   }
 
-
   .weather-temp {
     font-size: 40px;
+  }
+
+  .forecast-day {
+    font-size: 12px;
+  }
+
+  .forecast-visual {
+    width: 62px;
+    height: 62px;
+    display: grid;
+  }
+
+  .forecast-icon {
+    width: 54px;
+    height: 54px;
+    filter: drop-shadow(0 5px 8px rgba(15, 63, 136, 0.425));
+  }
+
+  .forecast-temp {
+    font-size: 25px;
+    line-height: 1;
+    font-weight: 800;
+    color: var(--primary-color);
+    margin-top: 8px;
+  }
+
+  .forecast-description {
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .forecast-meta {
+    font-size: 12px;
   }
 }
