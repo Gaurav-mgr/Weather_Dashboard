@@ -52,8 +52,8 @@
 
 .close-btn {
   position: fixed;
-  top: 15px;
-  right: 18px;
+  top: 28px;
+  right: 38px;
   width: 38px;
   height: 38px;
   display: grid;
@@ -354,7 +354,7 @@
   .detailed-forecast-modal {
     position: absolute;
     width: min(430px, 100%);
-    max-height: min(58vh, 760px);
+    max-height: min(62vh, 760px);
     padding: 26px;
   }
 
@@ -445,8 +445,11 @@
     background: rgba(2, 63, 216, 0.151);
   }
 
-  .detailed-forecast-modal::-webkit-scrollbar,
+  .detailed-forecast-modal::-webkit-scrollbar {
+    width: 5px;
+  }
+
   .hourly-container::-webkit-scrollbar {
-    height: 3px;
+    height: 4px;
   }
 }
