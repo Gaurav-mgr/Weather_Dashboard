@@ -3,10 +3,10 @@ import '../styles/DetailedForecast.css';
 
 export default function DetailedForecast({ forecastData, selectedDay, onClose }) {
   const [selectedForecast, setSelectedForecast] = useState(selectedDay);
-  const formattedDay = new Date(selectedDay.dt_txt).toLocaleDateString('en-US', { 
-    weekday: 'long', 
-    month: 'short', 
-    day: 'numeric' 
+  const formattedDay = new Date(selectedDay.dt_txt).toLocaleDateString('en-US', {
+    weekday: 'long',
+    month: 'short',
+    day: 'numeric'
   });
 
   // Get all forecasts for the selected day
@@ -28,7 +28,7 @@ export default function DetailedForecast({ forecastData, selectedDay, onClose })
             <p className="weather-condition">Updated in 3-hour forecast intervals</p>
           </div>
           <div className="detail-hero-temp">
-            <img 
+            <img
               src={`https://openweathermap.org/img/wn/${selectedForecast.weather[0].icon}@2x.png`}
               alt=""
               aria-hidden="true"
@@ -49,13 +49,13 @@ export default function DetailedForecast({ forecastData, selectedDay, onClose })
                 aria-label={`Select forecast for ${new Date(forecast.dt_txt).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}`}
               >
                 <p className="time">
-                  {new Date(forecast.dt_txt).toLocaleTimeString('en-US', { 
-                    hour: '2-digit', 
+                  {new Date(forecast.dt_txt).toLocaleTimeString('en-US', {
+                    hour: '2-digit',
                     minute: '2-digit',
-                    hour12: true 
+                    hour12: true
                   })}
                 </p>
-                <img 
+                <img
                   src={`https://openweathermap.org/img/wn/${forecast.weather[0].icon}@2x.png`}
                   alt={forecast.weather[0].description}
                   className="hourly-icon"
@@ -79,8 +79,8 @@ export default function DetailedForecast({ forecastData, selectedDay, onClose })
               <p className="metric-label">Humidity</p>
               <p className="metric-value">{selectedForecast.main.humidity}%</p>
               <div className="humidity-bar">
-                <div 
-                  className="humidity-fill" 
+                <div
+                  className="humidity-fill"
                   style={{ width: `${selectedForecast.main.humidity}%` }}
                 ></div>
               </div>
@@ -107,8 +107,8 @@ export default function DetailedForecast({ forecastData, selectedDay, onClose })
               <p className="metric-label">Cloudiness</p>
               <p className="metric-value">{selectedForecast.clouds.all}%</p>
               <div className="clouds-bar">
-                <div 
-                  className="clouds-fill" 
+                <div
+                  className="clouds-fill"
                   style={{ width: `${selectedForecast.clouds.all}%` }}
                 ></div>
               </div>
