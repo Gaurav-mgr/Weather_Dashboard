@@ -1,122 +1,113 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useState, useEffect } from 'react';
+import { useWeather } from './hooks/useWeather';
+import SearchBar from './components/SearchBar';
+import Forecast from './components/Forecast';
+import LoadingScreen from './components/LoadingScreen';
+import { getWeatherBackground } from './utils/weatherBackgrounds';
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function App() {
+  // Initialize state by checking localStorage first
+  const [city, setCity] = useState(() => {
+    const savedCity = localStorage.getItem('lastSearchedCity');
+    return savedCity || '';
+  });
+
+  const [showLoadingScreen, setShowLoadingScreen] = useState(true);
+  const [loadingScreenExiting, setLoadingScreenExiting] = useState(false);
+  const { data, loading, error } = useWeather(city);
+
+  // Show loading screen on mount, then slide it away before unmounting.
+  useEffect(() => {
+    const exitTimer = setTimeout(() => {
+      setLoadingScreenExiting(true);
+    }, 1800);
+    const removeTimer = setTimeout(() => {
+      setShowLoadingScreen(false);
+    }, 2600);
+
+    return () => {
+      clearTimeout(exitTimer);
+      clearTimeout(removeTimer);
+    };
+  }, []);
+
+  // Sync state changes to localStorage whenever a successful search happens
+  useEffect(() => {
+    if (city && data && !error) {
+      localStorage.setItem('lastSearchedCity', city);
+    }
+  }, [city, data, error]);
+
+  const weatherBg = getWeatherBackground(data?.current?.weather[0]?.main);
+
+  // Sync background class to body for full-screen effect
+  useEffect(() => {
+    if (weatherBg && weatherBg.className) {
+      document.body.className = weatherBg.className;
+    }
+  }, [weatherBg]);
 
   return (
     <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+      {showLoadingScreen && <LoadingScreen isExiting={loadingScreenExiting} />}
 
-      <div className="ticks"></div>
+      <div className={`app-container ${weatherBg.className}`}>
+        <header className="app-header">
+          <h1>Weather Analytics Dashboard</h1>
+          <p>Get real-time weather insights for any city</p>
+        </header>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+        <SearchBar onSearch={setCity} />
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
+        {!city && !loading && !error && (
+          <div className="empty-state">
+            <p>Please enter a city name to see the weather analytics.</p>
+          </div>
+        )}
+
+        {loading && <p className="loading-message">Retrieving live meteorological data...</p>}
+
+        {error && (
+          <div className="error-message">
+            Error: {error}
+          </div>
+        )}
+
+        {data && !loading && (
+          <main className="main-content">
+            <div className="weather-header">
+              <div className="weather-info">
+                <div className="city">
+                  <h2>{data.current.name}, {data.current.sys?.country}</h2>
+                  <p className="weather-description">
+                    {data.current.weather[0].description}
+                  </p>
+                </div>
+                <div className="weather-temp">
+                  {Math.round(data.current.main.temp)}°C
+                </div>
+              </div>
+            </div>
+
+            <div className="weather-details">
+              <div className="weather-detail-item">
+                <strong>Humidity</strong>
+                <span>{data.current.main.humidity}%</span>
+              </div>
+              <div className="weather-detail-item">
+                <strong>Wind Speed</strong>
+                <span>{data.current.wind.speed} m/s</span>
+              </div>
+              <div className="weather-detail-item">
+                <strong>Feels Like</strong>
+                <span>{Math.round(data.current.main.feels_like)}°C</span>
+              </div>
+            </div>
+
+            <Forecast forecastData={data.forecast} />
+          </main>
+        )}
+      </div>
     </>
-  )
+  );
 }
-
-export default App
